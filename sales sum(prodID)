@@ -1,0 +1,20 @@
+CREATE OR REPLACE FUNCTION get_total_sales_by_prod(prod_id IN VARCHAR2)
+RETURN NUMBER
+IS
+    total_sales NUMBER;
+BEGIN
+    -- Sum quantities sold for the given product
+    SELECT NVL(SUM(quantity), 0)
+    INTO total_sales
+    FROM sales
+    WHERE prodid = prod_id;
+
+    RETURN total_sales;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20004, 'Error fetching sales by product: ' || SQLERRM);
+END;
+/
+SELECT get_total_sales_by_prod('P002') AS total_quantity_sold
+FROM dual;
