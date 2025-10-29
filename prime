@@ -1,0 +1,20 @@
+create or replace procedure find_prime(n in number) AS
+flag BOOLEAN;
+begin
+    for i in 2..n loop
+    flag:=true;
+    for j in 2..trunc(sqrt(i)) LOOP
+    if mod(i,j)=0 THEN
+    flag:=FALSE;
+    end if;
+    end loop;
+    if flag THEN
+    dbms_output.put_line(i||' is a prime number');
+    end if;
+    end loop;
+    end;
+    /
+    begin
+        find_prime(30);
+    end;
+    /
