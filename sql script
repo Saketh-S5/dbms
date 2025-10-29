@@ -1,0 +1,30 @@
+
+CREATE TABLE department (  
+    DeptId INT PRIMARY KEY NOT NULL,  
+    DeptName VARCHAR(25) CHECK (DeptName IN ('Accounts', 'Sales', 'Technical', 'HR', 'R&D')),  
+    DeptLoc VARCHAR(25)  
+);
+
+CREATE TABLE Employee(   
+    EmpId int PRIMARY KEY,   
+    EmpName varchar(50),   
+    DoB date,   
+    DoJ date,   
+    Job varchar(25),   
+    Salary int,   
+    DeptId int not null, Foreign Key(DeptId) references Department(DeptId));
+
+CREATE TABLE product(  
+    ProdId VARCHAR(10) PRIMARY KEY CHECK (ProdId LIKE 'P%'),  
+    ProdName VARCHAR(255) DEFAULT NULL,  
+    Price INT NOT NULL  
+);
+CREATE TABLE Sales (
+    SalesId INT PRIMARY KEY, 
+    SalesDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
+    Quantity INT NOT NULL, 
+    EmpId INT, 
+    ProdId VARCHAR(10),
+    FOREIGN KEY (EmpId) REFERENCES Employee(EmpId),
+    FOREIGN KEY (ProdId) REFERENCES Product(ProdId)
+);
