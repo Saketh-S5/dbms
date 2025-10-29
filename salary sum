@@ -1,0 +1,30 @@
+CREATE OR REPLACE PROCEDURE SUM_SALARY_BY_LOCATION (
+    P_LOCATION     IN VARCHAR2,
+    P_TOTAL_SALARY OUT NUMBER
+) AS
+BEGIN
+    -- Calculate sum of salaries for employees in the given location
+    SELECT
+        NVL(
+            SUM(E.SALARY),
+            0
+        )
+    INTO P_TOTAL_SALARY
+    FROM
+             EMPLOYEE E
+        JOIN DEPARTMENT D ON E.DEPTID = D.DEPTID
+    WHERE
+        D.DEPTLOC = P_LOCATION;
+
+END;
+/
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+    TOTAL_SALARY NUMBER;
+BEGIN
+    SUM_SALARY_BY_LOCATION('Bangalore', TOTAL_SALARY);
+    DBMS_OUTPUT.PUT_LINE('Total Salary for Bangalore: ' || TOTAL_SALARY);
+END;
+/
