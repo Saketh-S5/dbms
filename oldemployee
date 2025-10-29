@@ -1,0 +1,22 @@
+CREATE TABLE oldemployee (
+    empid NUMBER(5) PRIMARY KEY,
+    empname VARCHAR2(50),
+    dob DATE,
+    doj DATE,
+    job VARCHAR2(50),
+    salary NUMBER(10),
+    deptid NUMBER(5)
+);
+CREATE OR REPLACE TRIGGER emp_del_trig
+AFTER DELETE ON employee
+FOR EACH ROW
+BEGIN
+    INSERT INTO oldemployee (empid, empname, dob, doj, job, salary, deptid)
+    VALUES (:OLD.empid, :OLD.empname, :OLD.dob, :OLD.doj, :OLD.job, :OLD.salary, :OLD.deptid);
+END;
+/
+-- Delete an employee
+DELETE FROM employee WHERE empid = 105;
+
+-- Check OldEmployee table
+SELECT * FROM oldemployee;
