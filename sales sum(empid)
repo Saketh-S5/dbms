@@ -1,0 +1,20 @@
+CREATE OR REPLACE FUNCTION get_sales_by_emp(emp_id IN NUMBER)
+RETURN NUMBER
+IS
+    total_sales NUMBER;
+BEGIN
+    -- Sum quantities sold by the employee
+    SELECT NVL(SUM(quantity), 0)
+    INTO total_sales
+    FROM sales
+    WHERE empid = emp_id;
+
+    RETURN total_sales;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20005, 'Error fetching sales by employee: ' || SQLERRM);
+END;
+/
+SELECT get_sales_by_emp(101) AS total_sales
+FROM dual;
