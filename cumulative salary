@@ -1,0 +1,36 @@
+CREATE OR REPLACE PROCEDURE generate_employee_report IS
+BEGIN
+    -- Output headers
+    DBMS_OUTPUT.PUT_LINE('DeptName    | EmpName      | Job            | Location    | Salary   | Cumulative_Salary');
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------------------------------------------------');
+
+    -- Loop through department and employee data
+    FOR rec IN (
+        SELECT 
+            d.deptname AS DeptName,
+            e.empname AS EmpName,
+            e.job AS Job,
+            d.deptloc AS Location,
+            e.salary AS Salary,
+            SUM(e.salary) OVER (PARTITION BY d.deptid ORDER BY e.empname) AS Cumulative_Salary
+        FROM employee e
+        JOIN department d ON e.deptid = d.deptid
+        ORDER BY d.deptname, e.empname
+    )
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(
+            RPAD(rec.DeptName, 12) || ' | ' ||
+            RPAD(rec.EmpName, 12) || ' | ' ||
+            RPAD(rec.Job, 15) || ' | ' ||
+            RPAD(rec.Location, 10) || ' | ' ||
+            RPAD(rec.Salary, 8) || ' | ' ||
+            rec.Cumulative_Salary
+        );
+    END LOOP;
+END;
+/
+SET SERVEROUTPUT ON;
+BEGIN
+    generate_employee_report;
+END;
+/
