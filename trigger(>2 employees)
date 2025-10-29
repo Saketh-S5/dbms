@@ -1,0 +1,23 @@
+CREATE OR REPLACE TRIGGER emp_delete_limit
+BEFORE DELETE ON employee
+DECLARE
+    v_count NUMBER;
+BEGIN
+    -- Count how many employees are being deleted in this statement
+    SELECT COUNT(*) INTO v_count
+    FROM employee
+    WHERE empid IN (
+        SELECT empid FROM employee /* The rows targeted for deletion */
+    );
+
+    -- Raise error if more than 2 rows are being deleted
+    IF v_count > 2 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'You cannot delete more than 2 employees at a time.');
+    END IF;
+END;
+/
+-- Attempt to delete 3 employees at once
+BEGIN
+DELETE FROM employee WHERE empid IN (102, 103, 104);
+END;
+/
